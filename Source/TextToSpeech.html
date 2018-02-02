@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Title</title>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.1/angular.min.js">
+            </script>
+            <script>
+                angular.module('nutDetails', [])
+                    .controller('nutDetailsctrl', function($scope, $http) {
+
+                        $scope.getNutritionDetails = function() {
+                            var item= $scope.myItem;
+                            $http.get('http://api.edamam.com/api/nutrition-data?app_id=d4b6d8a6&app_key=e2a67f5eb34a11fe58fab59821a8d086&ingr='+item).success(function(data) {
+                                console.log(data);
+                                cal = data.calories;
+                                diet = data.dietLabels;
+                                weight = data.totalWeight;
+                                var caldetail = item  + " has " + cal + " calories and weighs " + weight + "grams";
+                                $scope.calorieweight = {
+                                    html: "Calories " + cal + " and Weight " + weight + " grams "
+                                }
+                                $scope.caloriesdetails = {
+                                    html: "<a href=\"https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?username=367c1123-e79b-449d-bc7d-2c06ccd4d9da&password=pakrvAcMNuvH&text="+caldetail+"\"> Click to Play </a>"
+                                }
+
+
+                            })
+                        }
+
+                    });
+            </script>
+
+        </head>
+<body>
+
+
+<div align="center" ng-app="nutDetails" ng-controller="nutDetailsctrl">
+    <h2> <caption>
+        Nutrition Details</br>
+    </caption></h2>
+    Item:
+    <input  type="text" ng-model="myItem"><br><br>
+
+    <button id="btn" ng-click="getNutritionDetails()"> Submit </button>
+    <br/>
+    <br/>
+    <div class="nutDetailsModule">
+        <p class="currentConditions" ng-bind-html-unsafe="calorieweight.html"></p>
+        <p ng-bind-html-unsafe="caloriesdetails.html"></p>
+    </div>
+</div>
+
+</body>
+
+</html>
